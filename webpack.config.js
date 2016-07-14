@@ -31,7 +31,7 @@ const common = {
       },
       {
         test: /\.scss$/,
-        loaders: ['style', 'css', 'sass']
+        loaders: ['style', 'css?sourceMap', 'sass?sourceMap']
       }
     ]
   },
@@ -51,14 +51,24 @@ var config;
 
 switch(process.env.npm_lifecycle_event) {
   case 'build':
-    config = merge(common, {});
+    config = merge(
+      common, 
+      {
+        devtool: 'source-map'
+      }
+    );
     break;
   default:
-    config = merge(common, parts.devServer({
-      // Customize host/port here if needed
-      host: process.env.HOST,
-      port: process.env.PORT
-    })
+    config = merge(
+      common, 
+      {
+        devtool: 'eval-source-map'
+      },
+      parts.devServer({
+        // Customize host/port here if needed
+        host: process.env.HOST,
+        port: process.env.PORT
+      })
   );
 }
 
